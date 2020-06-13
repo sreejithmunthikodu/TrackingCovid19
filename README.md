@@ -11,4 +11,4 @@ Flask==1.1.1
 pandas==1.0.1  
 numpy==1.18.1  
 
-The CSS styling of is website has been inspired from (plotly demo app)[https://dash-gallery.plotly.host/dash-uber-rides-demo/]()  
+The CSS styling of is website has been inspired from [plotly demo app](https://dash-gallery.plotly.host/dash-uber-rides-demo/)  
