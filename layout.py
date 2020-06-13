@@ -2,13 +2,11 @@ import dash
 import dash_html_components as html
 import dash_core_components as dcc
 from dash.dependencies import Input, Output
-import dash_bootstrap_components as dbc
 
-from datetime import datetime as dt
 import plotly.express as px
 import os
 import pandas as pd
-from datetime import date, timedelta
+from datetime import timedelta
 
 
 
@@ -92,6 +90,7 @@ def import_data(data, val_name, required_columns):
     df_melted["date"] = pd.to_datetime(df_melted.date)
 
     return df_melted  
+    
 
 # Path to the data
 path_data = "data/csse_covid_19_time_series"
@@ -105,6 +104,7 @@ latest_date = output['latest_date']
 start_date = output['start_date'] 
 dates = [start_date + timedelta(days=x) for x in range((latest_date-start_date).days + 1)]
 dates_dict = {i:dt for i, dt in enumerate(dates)}
+total_days = len(dates)
 
 df = output['df']
 dfl = output['dfl']
@@ -121,13 +121,13 @@ selected_countries = list(dfl.sort_values('Confirmed', ascending=False)['country
 app.layout = html.Div(
     children=[
         html.Div(
-            className="row",
+            dbc.Row(
             children=[
                 html.Div(
                 className="three columns div-user-controls",
                 children=[
-                    html.Div(
-                        className='row',
+                    dbc.Row(
+                        
                         children=[
                             html.Img(
                             className="logo", src=app.get_asset_url("dash-logo-new.png")
@@ -152,8 +152,8 @@ app.layout = html.Div(
                                 id='date_slider',
                                 marks={0:start_date},
                                 min=0,
-                                max=len(dates)-1,
-                                value=[0, len(dates)-1],
+                                max=total_days-1,
+                                value=[0, total_days-1],
                                 allowCross=False
                     )
 
@@ -258,26 +258,25 @@ def update_figure(selected_country, time_range):
     dfn = df.query("country == @selected_country and date >= @start and date <= @end")
     # Plot timeline
     fig_tl = px.line(dfn, x="date", y="Confirmed", color='country')
-    for trace in fig_tl.data:
-        trace.name = trace.name.split('=')[1]
+    # for trace in fig_tl.data:
+    #     trace.name = trace.name.split('=')[1]
 
     fig_tl.update_layout(xaxis_showgrid=False, yaxis_showgrid=False, yaxis_title_text="",
                                 xaxis_title_text="", showlegend=True, title=f"Timeline of Total Confirmed Cases Between {start} and {end}",
                                 plot_bgcolor="#323130", paper_bgcolor="#323130", font=dict(color="white"),
                                 margin= {'t': 50, 'b': 10, 'l': 10, 'r': 0})
 
-    width=733
     # Plot summary of selected countries
     dfn = dfl.query("country == @selected_country")
     dfn = dfn.melt(id_vars=['country'], value_vars=['Confirmed', "Recovered", 'Deaths'])
     fig_sum = px.bar(dfn, x="variable", y="value", facet_col='country', color='country')
-    for trace in fig_sum.data:
-        trace.name = trace.name.split('=')[1]
+    # for trace in fig_sum.data:
+    #     trace.name = trace.name.split('=')[1]
 
     fig_sum.for_each_annotation(lambda a: a.update(text=""))
     fig_sum.for_each_xaxis(lambda a: a.update(title=""))    
     fig_sum.for_each_yaxis(lambda a: a.update(showgrid=False, title=''))
-    fig_sum.update_xaxes(tickangle=45)
+    fig_sum.update_xaxes(tickangle=90)
 
     fig_sum.update_layout(bargroupgap=0, bargap=0.1, plot_bgcolor="#323130", paper_bgcolor="#323130", font=dict(color="white"),
                           title=f"Total Cases as on {latest_date}", showlegend=False)
@@ -289,16 +288,16 @@ def update_figure(selected_country, time_range):
     dfn_24 = dfn_24.melt(id_vars=['country'], value_vars=["Confirmed", "Recovered", "Deaths"])
 
     fig_24 = px.bar(dfn_24, x="variable", y="value", facet_col='country', color='country')
-    for trace in fig_24.data:
-        trace.name = trace.name.split('=')[1]
+    # for trace in fig_24.data:
+    #     trace.name = trace.name.split('=')[1]
     fig_24.for_each_annotation(lambda a: a.update(text=""))
     fig_24.for_each_xaxis(lambda a: a.update(title=""))    
     fig_24.for_each_yaxis(lambda a: a.update(showgrid=False, title=''))
     fig_24.update_layout(bargroupgap=0, bargap=0.1, plot_bgcolor="#323130", paper_bgcolor="#323130", font=dict(color="white"),
                          title=f"New cases in the Last 24 Hours ({latest_date})")
-    fig_24.update_xaxes(tickangle=45)
+    fig_24.update_xaxes(tickangle=90)
 
     return [fig_tl, fig_sum, fig_24]
 
 if __name__ == '__main__':
-    app.run_server(debug=True, port=8001)
+    app.run_server(host='0.0.0.0')

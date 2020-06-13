@@ -258,8 +258,8 @@ def update_figure(selected_country, time_range):
     dfn = df.query("country == @selected_country and date >= @start and date <= @end")
     # Plot timeline
     fig_tl = px.line(dfn, x="date", y="Confirmed", color='country')
-    for trace in fig_tl.data:
-        trace.name = trace.name.split('=')[1]
+    # for trace in fig_tl.data:
+    #     trace.name = trace.name.split('=')[1]
 
     fig_tl.update_layout(xaxis_showgrid=False, yaxis_showgrid=False, yaxis_title_text="",
                                 xaxis_title_text="", showlegend=True, title=f"Timeline of Total Confirmed Cases Between {start} and {end}",
@@ -270,8 +270,8 @@ def update_figure(selected_country, time_range):
     dfn = dfl.query("country == @selected_country")
     dfn = dfn.melt(id_vars=['country'], value_vars=['Confirmed', "Recovered", 'Deaths'])
     fig_sum = px.bar(dfn, x="variable", y="value", facet_col='country', color='country')
-    for trace in fig_sum.data:
-        trace.name = trace.name.split('=')[1]
+    # for trace in fig_sum.data:
+    #     trace.name = trace.name.split('=')[1]
 
     fig_sum.for_each_annotation(lambda a: a.update(text=""))
     fig_sum.for_each_xaxis(lambda a: a.update(title=""))    
@@ -279,7 +279,7 @@ def update_figure(selected_country, time_range):
     fig_sum.update_xaxes(tickangle=90)
 
     fig_sum.update_layout(bargroupgap=0, bargap=0.1, plot_bgcolor="#323130", paper_bgcolor="#323130", font=dict(color="white"),
-                          title=f"Total Cases as on {latest_date}", showlegend=False)
+                          title=f"Total Cases as on {latest_date}", showlegend=True)
 
     # Plot change in last 24 hours for the selected countries
     dfn_24 = dfl_change_summary.query("country == @selected_country")
@@ -288,8 +288,8 @@ def update_figure(selected_country, time_range):
     dfn_24 = dfn_24.melt(id_vars=['country'], value_vars=["Confirmed", "Recovered", "Deaths"])
 
     fig_24 = px.bar(dfn_24, x="variable", y="value", facet_col='country', color='country')
-    for trace in fig_24.data:
-        trace.name = trace.name.split('=')[1]
+    # for trace in fig_24.data:
+    #     trace.name = trace.name.split('=')[1]
     fig_24.for_each_annotation(lambda a: a.update(text=""))
     fig_24.for_each_xaxis(lambda a: a.update(title=""))    
     fig_24.for_each_yaxis(lambda a: a.update(showgrid=False, title=''))
@@ -300,4 +300,4 @@ def update_figure(selected_country, time_range):
     return [fig_tl, fig_sum, fig_24]
 
 if __name__ == '__main__':
-    app.run_server(debug=True, port=8001)
+    app.run_server()
