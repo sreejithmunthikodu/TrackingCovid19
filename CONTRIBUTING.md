@@ -43,4 +43,4 @@ If you are proposing a feature:
 
 ## Code of Conduct
 
-This project is released with [this Contributor Code of Conduct](CONDUCT.md). By contributing to this project you agree to abide by its terms.
+This project is released with [this](CONDUCT.md) Code of Conduct. By contributing to this project you agree to abide by its terms.
