@@ -314,4 +314,4 @@ def update_figure(selected_country, time_range):
     return [fig_tl, fig_sum, fig_24]
 
 if __name__ == '__main__':
-    app.run_server(debug=True, port=8001)
+    app.run_server()
