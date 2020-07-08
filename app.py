@@ -272,8 +272,8 @@ def update_figure(selected_country, time_range):
     dfn["Confirmed"] = dfn["Confirmed"]/dfn["population"]*10000
     # Plot timeline
     fig_tl = px.line(dfn, x="date", y="Confirmed", color='country')
-    for trace in fig_tl.data:
-        trace.name = trace.name.split('=')[1]
+    # for trace in fig_tl.data:
+    #     trace.name = trace.name.split('=')[1]
 
     fig_tl.update_layout(xaxis_showgrid=False, yaxis_showgrid=False, yaxis_title_text="",
                                 xaxis_title_text="", showlegend=True, title=f"Total Confirmed Cases per 10,000 Population Between {start} and {end}",
@@ -284,8 +284,8 @@ def update_figure(selected_country, time_range):
     dfn = dfl.query("country == @selected_country")
     dfn = dfn.melt(id_vars=['country'], value_vars=['Confirmed', "Recovered", 'Deaths'])
     fig_sum = px.bar(dfn, y="variable", x="value", facet_row='country', color='country', orientation='h')
-    for trace in fig_sum.data:
-        trace.name = trace.name.split('=')[1]
+    # for trace in fig_sum.data:
+    #     trace.name = trace.name.split('=')[1]
 
     fig_sum.for_each_annotation(lambda a: a.update(text=""))
     fig_sum.for_each_xaxis(lambda a: a.update(showgrid=False, title=""))    
@@ -302,8 +302,8 @@ def update_figure(selected_country, time_range):
     dfn_24 = dfn_24.melt(id_vars=['country'], value_vars=["Confirmed", "Recovered", "Deaths"])
 
     fig_24 = px.bar(dfn_24, y="variable", x="value", facet_row='country', color='country', orientation='h')
-    for trace in fig_24.data:
-        trace.name = trace.name.split('=')[1]
+    # for trace in fig_24.data:
+    #     trace.name = trace.name.split('=')[1]
     fig_24.for_each_annotation(lambda a: a.update(text=""))
     fig_24.for_each_xaxis(lambda a: a.update(showgrid=False, title=""))    
     fig_24.for_each_yaxis(lambda a: a.update(showgrid=False, title=''))
